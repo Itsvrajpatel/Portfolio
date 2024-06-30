@@ -75,7 +75,7 @@ const Navbar = () => {
                     setActive(Link.title);
                   }}
                 >
-                  
+                  <a href={`#${Link.id}`}>{Link.title}</a>
                 </li>
               ))}
             </ul>
