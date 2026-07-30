@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #050505;
+  --foreground: #ffffff;
+  --theme-color: #00ff66; /* Vibrant green */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+/* ── Depth layer animations ─────────────────────────────────────────────── */
+
+/* Green spotlight: slow inhale / exhale */
+@keyframes spotlight-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+.animate-spotlight {
+  animation: spotlight-breathe 8s ease-in-out infinite;
+  transform-origin: 50% 60%;
+}
+
+/* Particles: rise from bottom, fade out near top */
+@keyframes float-up {
+  0%   { transform: translateY(0)      translateX(0);    opacity: var(--p-opacity, 0.3); }
+  40%  { transform: translateY(-40vh)  translateX(8px);  opacity: var(--p-opacity, 0.3); }
+  80%  { transform: translateY(-75vh)  translateX(-6px); opacity: calc(var(--p-opacity, 0.3) * 0.4); }
+  100% { transform: translateY(-95vh)  translateX(2px);  opacity: 0; }
+}
+
+.animate-float-up {
+  animation: float-up linear infinite;
+  will-change: transform, opacity;
+}
