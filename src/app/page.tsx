@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import characterImg from "@/assets/character.png";
 import PixelTransition from "@/components/PixelTransition";
+import AboutSection from "@/components/AboutSection";
+import ScannerMarquee from "@/components/ScannerMarquee";
 
 // ---------------------------------------------------------------------------
 // Particle type — generated once, animated via CSS custom properties
@@ -58,6 +60,7 @@ export default function Home() {
   }, []);
 
   return (
+    <>
     <main className="relative min-h-screen w-full overflow-hidden bg-[#030303] text-white selection:bg-[#00ff66] selection:text-black font-sans">
 
       {/* ── LAYER 1 · Soft edge vignette — always static ─────────────────── */}
@@ -130,10 +133,15 @@ export default function Home() {
               el.style.transform   = "translateY(0px)";
             }}
           >
-            {["Work", "About", "Services", "Contact"].map((label) => (
+            {[
+              { label: "Work", href: "#" },
+              { label: "About", href: "#about" },
+              { label: "Services", href: "#" },
+              { label: "Contact", href: "#" },
+            ].map(({ label, href }) => (
               <a
                 key={label}
-                href="#"
+                href={href}
                 className="text-[11px] font-medium tracking-widest uppercase transition-colors duration-200"
                 style={{ color: scrolled ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.6)" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "#00ff66")}
@@ -204,5 +212,8 @@ export default function Home() {
       {/* ── LAYER 25 · Ground blend gradient ─────────────────────────────── */}
       <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-[#030303] via-[#030303]/50 to-transparent z-[25] pointer-events-none" />
     </main>
+    <ScannerMarquee />
+    <AboutSection />
+    </>
   );
 }
