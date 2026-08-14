@@ -38,3 +38,78 @@ body {
   animation: float-up linear infinite;
   will-change: transform, opacity;
 }
+
+/* ── Meet the Builder · Workspace section ──────────────────────────────── */
+
+/* Monitor power-on: blur clears, opacity rises, subtle green glow */
+@keyframes monitor-power-on {
+  0%   { opacity: 0; filter: blur(8px) brightness(0.3); }
+  40%  { opacity: 0.6; filter: blur(3px) brightness(0.7); }
+  100% { opacity: 1; filter: blur(0) brightness(1); }
+}
+
+/* Warm desk-lamp radial glow */
+@keyframes lamp-glow {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Terminal cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 1.06s step-end infinite;
+}
+
+/* Workspace image reveal */
+@keyframes workspace-reveal {
+  0%   { opacity: 0; transform: scale(1.04) translateY(30px); filter: blur(6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+
+/* Terminal typing line slide-in */
+@keyframes terminal-line-in {
+  0%   { opacity: 0; transform: translateX(-6px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Tech marquee */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee-scroll 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Blueprint grid pulse */
+@keyframes grid-pulse {
+  0%, 100% { opacity: 0.04; }
+  50%      { opacity: 0.07; }
+}
+
+.animate-grid-pulse {
+  animation: grid-pulse 6s ease-in-out infinite;
+}
+
+/* WhatsApp QR Scanner Sweep Laser */
+@keyframes scan-beam {
+  0%   { top: 2%; opacity: 0.3; }
+  50%  { top: 92%; opacity: 1; }
+  100% { top: 2%; opacity: 0.3; }
+}
+
+.animate-scan-beam {
+  animation: scan-beam 2.4s ease-in-out infinite;
+}
+
