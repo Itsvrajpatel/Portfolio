@@ -7,9 +7,16 @@ interface PixelTransitionProps {
   gridSize?: number;
   duration?: number;
   className?: string;
+  maskId?: string;
 }
 
-export default function PixelTransition({ imgSrc, gridSize = 35, duration = 1.5, className = "" }: PixelTransitionProps) {
+export default function PixelTransition({
+  imgSrc,
+  gridSize = 35,
+  duration = 1.5,
+  className = "",
+  maskId = "pixel-mask",
+}: PixelTransitionProps) {
   const [pixels, setPixels] = useState<number[]>([]);
   const [isRevealed, setIsRevealed] = useState(false);
 
@@ -29,7 +36,7 @@ export default function PixelTransition({ imgSrc, gridSize = 35, duration = 1.5,
   return (
     <svg className={`w-full h-full ${className}`} style={{ overflow: 'visible' }}>
       <defs>
-        <mask id="pixel-mask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+        <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
           {pixels.map((delay, i) => {
             const x = (i % gridSize) * step;
             const y = Math.floor(i / gridSize) * step;
@@ -58,7 +65,7 @@ export default function PixelTransition({ imgSrc, gridSize = 35, duration = 1.5,
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMax slice"
-        mask="url(#pixel-mask)"
+        mask={`url(#${maskId})`}
       />
     </svg>
   );
