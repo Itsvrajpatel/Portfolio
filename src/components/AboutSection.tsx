@@ -59,7 +59,7 @@ export default function AboutSection(): JSX.Element {
   const dotsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const [pixelReveal, setPixelReveal] = useState(false);
+  const [pixelReveal, setPixelReveal] = useState(true);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -349,7 +349,7 @@ export default function AboutSection(): JSX.Element {
       />
 
       {/* ── Content ─────────────────────────────────────────────────────── */}
-      <div className="relative z-[10] max-w-[1300px] mx-auto px-6 md:px-10 lg:px-16 pt-28 pb-20 lg:pt-36 lg:pb-28">
+      <div className="relative z-[10] max-w-[1300px] mx-auto px-6 md:px-10 lg:px-16 pt-28 pb-10 lg:pt-36 lg:pb-12">
 
         {/* Title — mirrors hero typography */}
         <div className="text-center mb-16 lg:mb-22">
@@ -382,7 +382,7 @@ export default function AboutSection(): JSX.Element {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20 lg:mb-28">
 
           {/* Left — story & bento */}
-          <div ref={leftColRef} style={{ opacity: reducedMotion ? 1 : 0 }}>
+          <div ref={leftColRef}>
             <p
               className="leading-[1.9] mb-10"
               style={{
@@ -426,9 +426,6 @@ export default function AboutSection(): JSX.Element {
                     cardsRef.current[index] = el;
                   }}
                   className="group relative flex flex-col"
-                  style={{
-                    opacity: reducedMotion ? 1 : 0,
-                  }}
                 >
                   {/* Timeline node/dot */}
                   <div
@@ -532,7 +529,7 @@ export default function AboutSection(): JSX.Element {
           </div>
 
           {/* Right — workspace scene */}
-          <div ref={workspaceRef} className="relative" style={{ opacity: reducedMotion ? 1 : 0 }}>
+          <div ref={workspaceRef} className="relative">
             {/* Monitor glow */}
             <div
               className="absolute inset-0 pointer-events-none z-[1]"

@@ -19,12 +19,14 @@ export default function PixelTransition({
 }: PixelTransitionProps) {
   const [pixels, setPixels] = useState<number[]>([]);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const totalPixels = gridSize * gridSize;
     const delays = Array.from({ length: totalPixels }).map(() => Math.random() * duration);
     setPixels(delays);
-    
+
     const timeout = setTimeout(() => {
       setIsRevealed(true);
     }, 50);
@@ -34,32 +36,38 @@ export default function PixelTransition({
   const step = 1 / gridSize;
 
   return (
-    <svg className={`w-full h-full ${className}`} style={{ overflow: 'visible' }}>
+    <svg className={`w-full h-full ${className}`} style={{ overflow: "visible" }}>
       <defs>
         <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-          {pixels.map((delay, i) => {
-            const x = (i % gridSize) * step;
-            const y = Math.floor(i / gridSize) * step;
-            return (
-              <rect
-                key={i}
-                x={x}
-                y={y}
-                width={step + 0.002}
-                height={step + 0.002}
-                fill="white"
-                style={{
-                  opacity: isRevealed ? 1 : 0,
-                  transition: `opacity 0.1s linear`,
-                  transitionDelay: `${delay}s`,
-                }}
-              />
-            );
-          })}
+          {!mounted || pixels.length === 0 ? (
+            /* Fallback mask: full white rectangle so image is 100% visible on SSR / initial mount */
+            <rect x="0" y="0" width="1" height="1" fill="white" />
+          ) : (
+            pixels.map((delay, i) => {
+              const x = (i % gridSize) * step;
+              const y = Math.floor(i / gridSize) * step;
+              return (
+                <rect
+                  key={i}
+                  x={x}
+                  y={y}
+                  width={step + 0.002}
+                  height={step + 0.002}
+                  fill="white"
+                  style={{
+                    opacity: isRevealed ? 1 : 0,
+                    transition: `opacity 0.25s linear`,
+                    transitionDelay: `${delay}s`,
+                  }}
+                />
+              );
+            })
+          )}
         </mask>
       </defs>
       <image
         href={imgSrc}
+        xlinkHref={imgSrc}
         x="0"
         y="0"
         width="100%"
