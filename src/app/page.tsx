@@ -5,6 +5,7 @@ import characterImg from "@/assets/character.png";
 import PixelTransition from "@/components/PixelTransition";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/services/ServicesSection";
+import ProjectsSection from "@/components/projects/ProjectsSection";
 import ScannerMarquee from "@/components/ScannerMarquee";
 
 // ---------------------------------------------------------------------------
@@ -135,7 +136,7 @@ export default function Home() {
               }}
             >
               {[
-                { label: "Work", href: "#" },
+                { label: "Work", href: "#work" },
                 { label: "About", href: "#about" },
                 { label: "Services", href: "#services" },
                 { label: "Contact", href: "#" },
@@ -216,6 +217,7 @@ export default function Home() {
       <ScannerMarquee />
       <AboutSection />
       <ServicesSection />
+      <ProjectsSection />
     </>
   );
 }
