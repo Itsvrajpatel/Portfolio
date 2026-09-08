@@ -118,11 +118,10 @@ export default function ProjectsCarousel({
             >
               {/* Card Container: Horizontal rectangle shape with smooth rounded corners */}
               <div
-                className={`relative w-[300px] sm:w-[420px] md:w-[500px] lg:w-[560px] aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ${
-                  isCenter
+                className={`relative w-[300px] sm:w-[420px] md:w-[500px] lg:w-[560px] aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ${isCenter
                     ? "ring-2 ring-[#00ff66] ring-offset-4 ring-offset-[#030303] shadow-[0_0_45px_rgba(0,255,102,0.35),0_25px_60px_rgba(0,0,0,0.95)]"
                     : "ring-1 ring-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
-                }`}
+                  }`}
                 style={{
                   background: "#080808",
                 }}
@@ -134,19 +133,17 @@ export default function ProjectsCarousel({
                     alt={project.title}
                     fill
                     sizes="(max-width: 640px) 320px, (max-width: 1024px) 520px, 600px"
-                    className={`object-cover object-center transition-all duration-700 ${
-                      isCenter ? "scale-100 filter-none" : "scale-105 filter contrast-125"
-                    }`}
+                    className={`object-cover object-center transition-all duration-700 ${isCenter ? "scale-100 filter-none" : "scale-105 filter contrast-125"
+                      }`}
                     priority={isCenter}
                   />
 
                   {/* Cyber Glass Gradient Overlays */}
                   <div
-                    className={`absolute inset-0 transition-opacity duration-500 ${
-                      isCenter
+                    className={`absolute inset-0 transition-opacity duration-500 ${isCenter
                         ? "bg-gradient-to-t from-black/85 via-black/20 to-black/30"
                         : "bg-black/40"
-                    }`}
+                      }`}
                   />
 
                   {/* Center Card Glowing HUD Accents */}
@@ -222,11 +219,10 @@ export default function ProjectsCarousel({
               type="button"
               onClick={() => onSelectProject(i)}
               aria-label={`Go to project ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === activeIndex
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex
                   ? "w-6 bg-[#00ff66] shadow-[0_0_8px_#00ff66]"
                   : "w-1.5 bg-white/20 hover:bg-white/40"
-              }`}
+                }`}
             />
           ))}
           <span className="ml-2 text-white/50 font-mono">

@@ -6,6 +6,7 @@ import PixelTransition from "@/components/PixelTransition";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/services/ServicesSection";
 import ProjectsSection from "@/components/projects/ProjectsSection";
+import TechStackMarquee from "@/components/skills/TechStackMarquee";
 import ScannerMarquee from "@/components/ScannerMarquee";
 
 // ---------------------------------------------------------------------------
@@ -218,6 +219,7 @@ export default function Home() {
       <AboutSection />
       <ServicesSection />
       <ProjectsSection />
+      <TechStackMarquee />
     </>
   );
 }
