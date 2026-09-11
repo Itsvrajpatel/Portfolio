@@ -7,6 +7,7 @@ import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/services/ServicesSection";
 import ProjectsSection from "@/components/projects/ProjectsSection";
 import TechStackMarquee from "@/components/skills/TechStackMarquee";
+import ProcessSection from "@/components/process/ProcessSection";
 import ScannerMarquee from "@/components/ScannerMarquee";
 
 // ---------------------------------------------------------------------------
@@ -111,7 +112,7 @@ export default function Home() {
             <nav
               className="pointer-events-auto flex items-center transition-all duration-500 ease-[cubic-bezier(.4,0,.2,1)]"
               style={{
-                gap: scrolled ? "32px" : "80px",
+                gap: scrolled ? "24px" : "60px",
                 height: scrolled ? "60px" : "auto",
                 paddingLeft: scrolled ? "28px" : "0px",
                 paddingRight: scrolled ? "28px" : "0px",
@@ -140,6 +141,8 @@ export default function Home() {
                 { label: "Work", href: "#work" },
                 { label: "About", href: "#about" },
                 { label: "Services", href: "#services" },
+                { label: "Skills", href: "#skills" },
+                { label: "Process", href: "#process" },
                 { label: "Contact", href: "#" },
               ].map(({ label, href }) => (
                 <a
@@ -220,6 +223,7 @@ export default function Home() {
       <ServicesSection />
       <ProjectsSection />
       <TechStackMarquee />
+      <ProcessSection />
     </>
   );
 }
