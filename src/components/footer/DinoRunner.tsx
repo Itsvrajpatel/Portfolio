@@ -32,6 +32,9 @@ export default function DinoRunner(): JSX.Element {
 
     const handleResize = () => {
       setupCanvas();
+      if (!isVisible) {
+        drawInitialState();
+      }
     };
     window.addEventListener("resize", handleResize);
 
@@ -352,10 +355,55 @@ export default function DinoRunner(): JSX.Element {
       nextSpawnDistance = 240;
     };
 
+    let isVisible = false;
+
+    function drawInitialState() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Clouds
+      clouds.forEach((cloud) => {
+        drawMatrix(CLOUD, cloud.x, cloud.y, "rgba(0, 255, 102, 0.18)", "#000", 1.8);
+      });
+
+      // Horizon line
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, GROUND_Y);
+      ctx.lineTo(width, GROUND_Y);
+      ctx.stroke();
+
+      // Ground bumps
+      ctx.fillStyle = "rgba(0, 255, 102, 0.35)";
+      groundBumps.forEach((bump) => {
+        ctx.fillRect(Math.round(bump.x), GROUND_Y, bump.len * SCALE, 1);
+        bump.pebbles.forEach((peb) => {
+          ctx.fillRect(Math.round((bump.x + (peb.x % 30)) % width), peb.y, 1.5, 1.5);
+        });
+      });
+
+      // Standing Dino
+      ctx.shadowColor = "rgba(0, 255, 102, 0.6)";
+      ctx.shadowBlur = 8;
+      drawMatrix(DINO_RUN_1, DINO_X, dinoY, "#00ff66", "#030303", SCALE);
+      ctx.shadowBlur = 0;
+
+      // Score
+      const displayHighScore = highScore.toString().padStart(5, "0");
+      ctx.fillStyle = "rgba(0, 255, 102, 0.4)";
+      ctx.font = "10px monospace";
+      ctx.textAlign = "right";
+      ctx.fillText(`HI ${displayHighScore}  00000`, width - 16, 20);
+    }
+
+    drawInitialState();
+
     // ─────────────────────────────────────────────────────────────
     // Game Loop
     // ─────────────────────────────────────────────────────────────
     const render = () => {
+      if (!isVisible) return;
+
       ctx.clearRect(0, 0, width, height);
 
       // 1. Clouds
@@ -622,10 +670,37 @@ export default function DinoRunner(): JSX.Element {
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    // ─────────────────────────────────────────────────────────────
+    // Intersection Observer (Runs only when in screen)
+    // ─────────────────────────────────────────────────────────────
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (!isVisible) {
+              isVisible = true;
+              cancelAnimationFrame(animationFrameId);
+              animationFrameId = requestAnimationFrame(render);
+            }
+          } else {
+            if (isVisible) {
+              isVisible = false;
+              cancelAnimationFrame(animationFrameId);
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 0.05,
+      }
+    );
+
+    observer.observe(canvas);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
