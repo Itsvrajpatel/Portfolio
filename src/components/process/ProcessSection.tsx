@@ -9,7 +9,6 @@ import {
   Wrench,
   FlaskConical,
   Rocket,
-  Sparkles,
   LucideIcon,
 } from "lucide-react";
 
@@ -339,69 +338,6 @@ export default function ProcessSection(): JSX.Element {
             })}
           </div>
         </div>
-
-        {/* Bottom Banner Detail Card with Smooth Fade In */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5, delay: 1.7, ease: "easeOut" }}
-          className="mt-12 sm:mt-14 p-4 sm:p-6 rounded-2xl relative overflow-hidden transition-all duration-500"
-          style={{
-            background: "rgba(18, 18, 18, 0.4)",
-            backdropFilter: "blur(16px)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,102,0.03)",
-          }}
-        >
-          {/* Subtle accent glow */}
-          <div
-            className={`absolute -right-20 -bottom-20 w-64 h-64 rounded-full pointer-events-none blur-3xl transition-opacity duration-700 bg-[#00ff66] ${
-              hoveredStep ? "opacity-20" : "opacity-5"
-            }`}
-          />
-
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#00ff66]/10 border border-[#00ff66]/30 text-[#00ff66]"
-              >
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-[11px] font-mono font-semibold tracking-wider text-[#00ff66]"
-                    style={{ fontFamily: mono }}
-                  >
-                    {hoveredStep ? hoveredStep.phase : "END-TO-END EXECUTION"}
-                  </span>
-                  <span className="text-zinc-600">•</span>
-                  <span className="text-xs font-semibold text-white tracking-wide">
-                    {hoveredStep ? `${hoveredStep.title} Phase` : "Agile Engineering Lifecycle"}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
-                  <span className="text-zinc-500 font-mono">
-                    {hoveredStep ? "Deliverables: " : "Scope: "}
-                  </span>
-                  <span className="text-zinc-200">
-                    {hoveredStep
-                      ? hoveredStep.deliverables
-                      : "Full lifecycle execution from architecture design to automated production deployment."}
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* Stage Indicator */}
-            <div className="flex items-center gap-2 font-mono text-xs text-zinc-500 self-end md:self-center">
-              <span>{hoveredStep ? "INSPECTING:" : "ROADMAP:"}</span>
-              <span className="text-white font-bold">
-                {hoveredStep ? `0${hoveredStep.number} / 06` : "06 PHASES"}
-              </span>
-            </div>
-          </div>
-        </motion.div>
       </div>
 
       {/* Keyframe animation style for pulse beam */}
