@@ -179,22 +179,22 @@ export default function ContactSection(): JSX.Element {
           >
             <div className="flex flex-col justify-between h-full space-y-6">
               <div>
-                {/* START HERE Badge matching SKILLS styling */}
+                {/* CONTACT Badge matching SKILLS styling */}
                 <div className="flex items-center gap-3 mb-5">
                   <span
                     className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-[#00ff66]/40 bg-[#00ff66]/10 text-[#00ff66] text-xs font-semibold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(0,255,102,0.2)]"
                     style={{ fontFamily: mono }}
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00ff66] shadow-[0_0_8px_#00ff66] animate-pulse" />
-                    START HERE
+                    CONTACT
                   </span>
                   <span className="text-xs text-zinc-500 font-mono tracking-wider hidden sm:inline-block">
-                    // LET&apos;S COLLABORATE
+                    // LET&apos;S COLLABORATE &amp; BUILD
                   </span>
                 </div>
 
                 {/* Main Headline */}
-                <h2 className="text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.08] mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight text-white leading-[1.12] mb-6">
                   Tell me what you{" "}
                   <br className="hidden sm:inline" />
                   want to{" "}

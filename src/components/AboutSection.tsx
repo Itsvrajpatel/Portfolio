@@ -351,29 +351,25 @@ export default function AboutSection(): JSX.Element {
       {/* ── Content ─────────────────────────────────────────────────────── */}
       <div className="relative z-[10] max-w-[1300px] mx-auto px-6 md:px-10 lg:px-16 pt-28 pb-10 lg:pt-36 lg:pb-12">
 
-        {/* Title — mirrors hero typography */}
-        <div className="text-center mb-16 lg:mb-22">
-          <span
-            className="inline-block text-[11px] font-semibold tracking-[0.25em] uppercase mb-6"
-            style={{ fontFamily: mono, color: "#00ff66" }}
-          >
-            {"// about"}
-          </span>
-          <h2 className="font-bold tracking-tighter leading-[0.88]">
+        {/* Section Header matching Skills & Process style */}
+        <div className="mb-12 sm:mb-16">
+          <div className="flex items-center gap-3 mb-5">
             <span
-              className="block"
-              style={{ fontSize: "clamp(3.5rem, 12vw, 8rem)", color: "#009933", opacity: 0.85 }}
+              className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-[#00ff66]/40 bg-[#00ff66]/10 text-[#00ff66] text-xs font-semibold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(0,255,102,0.2)]"
+              style={{ fontFamily: mono }}
             >
-              Who
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00ff66] shadow-[0_0_8px_#00ff66] animate-pulse" />
+              ABOUT
             </span>
-            <span
-              className="block text-transparent"
-              style={{
-                fontSize: "clamp(3.5rem, 12vw, 8rem)",
-                WebkitTextStroke: "2px rgba(0,255,102,0.35)",
-              }}
-            >
-              I Build
+            <span className="text-xs text-zinc-500 font-mono tracking-wider hidden sm:inline-block">
+              // BACKGROUND & PHILOSOPHY
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight text-white leading-[1.12] max-w-4xl">
+            Engineering intelligent products that{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff66] to-[#00e5ff]">
+              scale and perform.
             </span>
           </h2>
         </div>
