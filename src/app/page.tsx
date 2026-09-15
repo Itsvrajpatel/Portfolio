@@ -8,6 +8,7 @@ import ServicesSection from "@/components/services/ServicesSection";
 import ProjectsSection from "@/components/projects/ProjectsSection";
 import TechStackMarquee from "@/components/skills/TechStackMarquee";
 import ProcessSection from "@/components/process/ProcessSection";
+import ContactSection from "@/components/contact/ContactSection";
 import ScannerMarquee from "@/components/ScannerMarquee";
 
 // ---------------------------------------------------------------------------
@@ -143,7 +144,7 @@ export default function Home() {
                 { label: "Services", href: "#services" },
                 { label: "Skills", href: "#skills" },
                 { label: "Process", href: "#process" },
-                { label: "Contact", href: "#" },
+                { label: "Contact", href: "#contact" },
               ].map(({ label, href }) => (
                 <a
                   key={label}
@@ -224,6 +225,7 @@ export default function Home() {
       <ProjectsSection />
       <TechStackMarquee />
       <ProcessSection />
+      <ContactSection />
     </>
   );
 }
