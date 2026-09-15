@@ -137,7 +137,7 @@ export default function ContactSection(): JSX.Element {
   return (
     <section
       id="contact"
-      className="relative w-full overflow-hidden pt-20 pb-28 lg:pt-28 lg:pb-36 bg-[#030303] text-white"
+      className="relative w-full overflow-hidden pt-20 pb-6 sm:pb-8 lg:pt-28 bg-[#030303] text-white"
       aria-label="Contact and Project Inquiry"
     >
       {/* Blueprint Grid Background matching portfolio aesthetic */}
