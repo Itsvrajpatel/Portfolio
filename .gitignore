@@ -3,3 +3,8 @@ node_modules
 design.md
 requirements.md
 tasks.md
+
+# Environment variables
+.env
+.env*.local
+.env.local

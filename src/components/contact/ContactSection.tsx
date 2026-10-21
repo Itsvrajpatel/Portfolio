@@ -111,12 +111,28 @@ export default function ContactSection(): JSX.Element {
     setIsSubmitting(true);
     setErrorMessage("");
 
-    // Simulate sending brief
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send brief. Please try again.");
+      }
+
       setIsSubmitted(true);
-    } catch {
-      setErrorMessage("Something went wrong. Please try again or email directly.");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again or email directly.";
+      setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -658,7 +674,7 @@ export default function ContactSection(): JSX.Element {
             </div>
 
             <div className="text-zinc-600 text-[11px]">
-              © {new Date().getFullYear()} Vraj Patel. Crafted with Next.js & Tailwind.
+              © 2026 Vraj Patel. Crafted with Next.js & Tailwind.
             </div>
           </div>
 
