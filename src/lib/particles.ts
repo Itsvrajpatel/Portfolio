@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
-// Shared particle utility — called at module scope in consuming files
-// to guarantee SSR / client hydration parity (no Math.random() at render time)
+// Deterministic Particle Generator — guarantees 100% parity between SSR & Client
+// eliminating any React hydration mismatch errors.
 // ---------------------------------------------------------------------------
 
 export interface Particle {
@@ -12,13 +12,26 @@ export interface Particle {
   opacity: number;  // base opacity (0.10–0.45)
 }
 
-export function generateParticles(count: number): Particle[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    size: Math.random() * 2 + 1,          // 1–3 px
-    delay: Math.random() * 8,             // 0–8 s
-    duration: Math.random() * 6 + 6,      // 6–12 s
-    opacity: Math.random() * 0.35 + 0.1,  // 0.10–0.45
-  }));
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+export function generateParticles(count: number, baseSeed = 42): Particle[] {
+  return Array.from({ length: count }, (_, i) => {
+    const s1 = pseudoRandom(baseSeed + i * 5 + 1);
+    const s2 = pseudoRandom(baseSeed + i * 5 + 2);
+    const s3 = pseudoRandom(baseSeed + i * 5 + 3);
+    const s4 = pseudoRandom(baseSeed + i * 5 + 4);
+    const s5 = pseudoRandom(baseSeed + i * 5 + 5);
+
+    return {
+      id: i,
+      x: Number((s1 * 100).toFixed(2)),
+      size: Number((s2 * 2 + 1).toFixed(2)),           // 1–3 px
+      delay: Number((s3 * 8).toFixed(2)),              // 0–8 s
+      duration: Number((s4 * 6 + 6).toFixed(2)),       // 6–12 s
+      opacity: Number((s5 * 0.35 + 0.1).toFixed(3)),   // 0.10–0.45
+    };
+  });
 }

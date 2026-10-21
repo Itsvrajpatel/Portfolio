@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import characterImg from "@/assets/character.png";
 import PixelTransition from "@/components/PixelTransition";
 import AboutSection from "@/components/AboutSection";
@@ -10,64 +10,91 @@ import TechStackMarquee from "@/components/skills/TechStackMarquee";
 import ProcessSection from "@/components/process/ProcessSection";
 import ContactSection from "@/components/contact/ContactSection";
 import ScannerMarquee from "@/components/ScannerMarquee";
+import Preloader from "@/components/Preloader";
+import SmoothScroll from "@/components/SmoothScroll";
+import { generateParticles } from "@/lib/particles";
 
 // ---------------------------------------------------------------------------
-// Particle type — generated once, animated via CSS custom properties
+// 22 Lightweight particles for smooth, low-overhead ambient atmosphere
 // ---------------------------------------------------------------------------
-interface Particle {
-  id: number;
-  x: number;       // % from left
-  size: number;    // px
-  delay: number;   // animation-delay in seconds
-  duration: number;// animation-duration in seconds
-  opacity: number; // base opacity
-}
+const PARTICLES = generateParticles(22);
 
-function generateParticles(count: number): Particle[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    size: Math.random() * 2 + 1,        // 1–3 px
-    delay: Math.random() * 8,
-    duration: Math.random() * 6 + 6,    // 6–12 s
-    opacity: Math.random() * 0.35 + 0.1, // 0.10–0.45
-  }));
-}
-
-const PARTICLES = generateParticles(55);
-
-// ---------------------------------------------------------------------------
 export default function Home() {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
+    const heroEl = heroRef.current;
+    if (!heroEl) return;
+
+    let targetX = 50;
+    let targetY = 50;
+    let targetOffsetX = 0;
+    let targetOffsetY = 0;
+
     const handleMouseMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
-      setMousePos({
-        x: (e.clientX / innerWidth) * 100,
-        y: (e.clientY / innerHeight) * 100,
-      });
-      setMouseOffset({
-        x: (e.clientX / innerWidth - 0.5) * 2,
-        y: (e.clientY / innerHeight - 0.5) * 2,
-      });
+      targetX = (e.clientX / innerWidth) * 100;
+      targetY = (e.clientY / innerHeight) * 100;
+      targetOffsetX = (e.clientX / innerWidth - 0.5) * 2;
+      targetOffsetY = (e.clientY / innerHeight - 0.5) * 2;
+
+      if (!rafId.current) {
+        rafId.current = requestAnimationFrame(() => {
+          if (heroEl) {
+            heroEl.style.setProperty("--hero-mouse-x", `${targetX.toFixed(2)}%`);
+            heroEl.style.setProperty("--hero-mouse-y", `${targetY.toFixed(2)}%`);
+            heroEl.style.setProperty("--hero-offset-x", `${(targetOffsetX * 8).toFixed(2)}px`);
+            heroEl.style.setProperty("--hero-offset-y", `${(targetOffsetY * 8).toFixed(2)}px`);
+            heroEl.style.setProperty("--hero-char-x", `${(targetOffsetX * -8).toFixed(2)}px`);
+            heroEl.style.setProperty("--hero-char-y", `${(targetOffsetY * -4).toFixed(2)}px`);
+          }
+          rafId.current = null;
+        });
+      }
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 60);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <>
-      <main className="relative min-h-screen w-full overflow-hidden bg-[#030303] text-white selection:bg-[#00ff66] selection:text-black font-sans">
+      <Preloader />
+      <SmoothScroll />
 
+      <main
+        ref={heroRef}
+        className="relative min-h-screen w-full overflow-hidden bg-[#030303] text-white selection:bg-[#00ff66] selection:text-black font-sans"
+        style={{
+          // Default fallbacks
+          ["--hero-mouse-x" as string]: "50%",
+          ["--hero-mouse-y" as string]: "50%",
+          ["--hero-offset-x" as string]: "0px",
+          ["--hero-offset-y" as string]: "0px",
+          ["--hero-char-x" as string]: "0px",
+          ["--hero-char-y" as string]: "0px",
+        }}
+      >
         {/* ── LAYER 1 · Soft edge vignette — always static ─────────────────── */}
         <div
           className="absolute inset-0 z-[1] pointer-events-none"
@@ -86,12 +113,14 @@ export default function Home() {
           }}
         />
 
-        {/* ── LAYER 18 · Cursor glow — beneath character ───────────────────── */}
+        {/* ── LAYER 18 · Cursor glow — hardware accelerated via CSS variables ─ */}
         <div
-          className="absolute inset-0 z-[18] pointer-events-none transition-all duration-300 ease-out"
+          className="absolute inset-0 z-[18] pointer-events-none transition-opacity duration-300 ease-out"
           style={{
-            background: `radial-gradient(circle 500px at ${mousePos.x}% ${mousePos.y}%, rgba(0,255,102,0.18), transparent 70%)`,
+            background:
+              "radial-gradient(circle 500px at var(--hero-mouse-x) var(--hero-mouse-y), rgba(0,255,102,0.18), transparent 70%)",
             mixBlendMode: "screen",
+            willChange: "background",
           }}
         />
 
@@ -162,11 +191,12 @@ export default function Home() {
           </div>
         </header>
 
-        {/* ── LAYER 10 · Large typography — parallax shift ──────────────────── */}
+        {/* ── LAYER 10 · Large typography — hardware accelerated parallax ─── */}
         <div
-          className="absolute inset-0 z-[10] flex flex-col items-center justify-center font-bold tracking-tighter select-none transition-transform duration-200 ease-out pointer-events-none"
+          className="absolute inset-0 z-[10] flex flex-col items-center justify-center font-bold tracking-tighter select-none pointer-events-none"
           style={{
-            transform: `translate3d(${mouseOffset.x * 8}px, ${mouseOffset.y * 8}px, 0)`,
+            transform: "translate3d(var(--hero-offset-x), var(--hero-offset-y), 0)",
+            willChange: "transform",
           }}
         >
           <h1 className="text-[20vw] leading-[0.75] text-[#009933] opacity-60">
@@ -183,17 +213,20 @@ export default function Home() {
 
         {/* ── LAYER 20 · Character — counter-parallax to typography ───────── */}
         <div
-          className="absolute bottom-0 left-1/2 z-[20] w-full max-w-[525px] h-[89.25vh] -translate-x-1/2 flex items-end justify-center pointer-events-none transition-transform duration-200 ease-out"
+          className="absolute bottom-0 left-1/2 z-[20] w-full max-w-[525px] h-[89.25vh] pointer-events-none"
           style={{
-            transform: `translateX(-50%) translate3d(${mouseOffset.x * -8}px, ${mouseOffset.y * -4}px, 0)`,
+            transform: "translateX(-50%) translate3d(var(--hero-char-x), var(--hero-char-y), 0)",
+            willChange: "transform",
           }}
         >
-          <PixelTransition
-            gridSize={35}
-            duration={1.5}
-            imgSrc={characterImg.src}
-            className="[filter:drop-shadow(0_-2px_6px_rgba(0,255,102,0.12))_drop-shadow(0_0_40px_rgba(0,255,102,0.25))_drop-shadow(0_20px_35px_rgba(0,0,0,0.85))] pointer-events-auto"
-          />
+          <div className="w-full h-full flex items-end justify-center">
+            <PixelTransition
+              gridSize={24}
+              duration={1.3}
+              imgSrc={characterImg.src}
+              className="[filter:drop-shadow(0_0_30px_rgba(0,255,102,0.2))_drop-shadow(0_20px_35px_rgba(0,0,0,0.85))] pointer-events-auto"
+            />
+          </div>
         </div>
 
         {/* ── LAYER 19 · Floating particles — beneath character ───────────── */}
@@ -206,7 +239,6 @@ export default function Home() {
                 left: `${p.x}%`,
                 width: `${p.size}px`,
                 height: `${p.size}px`,
-                // feed per-particle opacity into the keyframe via a CSS custom property
                 ["--p-opacity" as string]: p.opacity,
                 opacity: p.opacity,
                 animationDelay: `${p.delay}s`,
@@ -219,6 +251,7 @@ export default function Home() {
         {/* ── LAYER 25 · Ground blend gradient ─────────────────────────────── */}
         <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-[#030303] via-[#030303]/50 to-transparent z-[25] pointer-events-none" />
       </main>
+
       <ScannerMarquee />
       <AboutSection />
       <ServicesSection />

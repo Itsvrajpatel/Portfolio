@@ -3,35 +3,64 @@
 @tailwind utilities;
 
 :root {
-  --background: #050505;
+  --background: #030303;
   --foreground: #ffffff;
   --theme-color: #00ff66; /* Vibrant green */
+  --hero-mouse-x: 50%;
+  --hero-mouse-y: 50%;
+  --hero-offset-x: 0px;
+  --hero-offset-y: 0px;
+  --about-mouse-x: 50%;
+  --about-mouse-y: 50%;
 }
 
-body {
-  color: var(--foreground);
+html {
   background: var(--background);
+  color: var(--foreground);
 }
 
-/* ── Depth layer animations ─────────────────────────────────────────────── */
+/* ── Lenis Smooth Scrolling Reset ────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ── Depth layer animations & GPU Optimization ──────────────────────────── */
 
 /* Green spotlight: slow inhale / exhale */
 @keyframes spotlight-breathe {
   0%, 100% { opacity: 0.7; transform: scale(1); }
-  50%       { opacity: 1;   transform: scale(1.08); }
+  50%       { opacity: 1;   transform: scale(1.06); }
 }
 
 .animate-spotlight {
   animation: spotlight-breathe 8s ease-in-out infinite;
   transform-origin: 50% 60%;
+  will-change: transform, opacity;
 }
 
 /* Particles: rise from bottom, fade out near top */
 @keyframes float-up {
-  0%   { transform: translateY(0)      translateX(0);    opacity: var(--p-opacity, 0.3); }
-  40%  { transform: translateY(-40vh)  translateX(8px);  opacity: var(--p-opacity, 0.3); }
-  80%  { transform: translateY(-75vh)  translateX(-6px); opacity: calc(var(--p-opacity, 0.3) * 0.4); }
-  100% { transform: translateY(-95vh)  translateX(2px);  opacity: 0; }
+  0%   { transform: translate3d(0, 0, 0); opacity: var(--p-opacity, 0.3); }
+  40%  { transform: translate3d(6px, -40vh, 0); opacity: var(--p-opacity, 0.3); }
+  80%  { transform: translate3d(-4px, -75vh, 0); opacity: calc(var(--p-opacity, 0.3) * 0.4); }
+  100% { transform: translate3d(2px, -95vh, 0); opacity: 0; }
 }
 
 .animate-float-up {
@@ -41,20 +70,6 @@ body {
 
 /* ── Meet the Builder · Workspace section ──────────────────────────────── */
 
-/* Monitor power-on: blur clears, opacity rises, subtle green glow */
-@keyframes monitor-power-on {
-  0%   { opacity: 0; filter: blur(8px) brightness(0.3); }
-  40%  { opacity: 0.6; filter: blur(3px) brightness(0.7); }
-  100% { opacity: 1; filter: blur(0) brightness(1); }
-}
-
-/* Warm desk-lamp radial glow */
-@keyframes lamp-glow {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* Terminal cursor blink */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0; }
@@ -64,26 +79,15 @@ body {
   animation: cursor-blink 1.06s step-end infinite;
 }
 
-/* Workspace image reveal */
-@keyframes workspace-reveal {
-  0%   { opacity: 0; transform: scale(1.04) translateY(30px); filter: blur(6px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-}
-
-/* Terminal typing line slide-in */
-@keyframes terminal-line-in {
-  0%   { opacity: 0; transform: translateX(-6px); }
-  100% { opacity: 1; transform: translateX(0); }
-}
-
 /* Tech marquee */
 @keyframes marquee-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .animate-marquee {
-  animation: marquee-scroll 28s linear infinite;
+  animation: marquee-scroll 30s linear infinite;
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,8 +98,8 @@ body {
 
 /* Blueprint grid pulse */
 @keyframes grid-pulse {
-  0%, 100% { opacity: 0.04; }
-  50%      { opacity: 0.07; }
+  0%, 100% { opacity: 0.03; }
+  50%      { opacity: 0.06; }
 }
 
 .animate-grid-pulse {
@@ -112,4 +116,3 @@ body {
 .animate-scan-beam {
   animation: scan-beam 2.4s ease-in-out infinite;
 }
-
