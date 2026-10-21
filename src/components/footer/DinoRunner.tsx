@@ -275,14 +275,14 @@ export default function DinoRunner(): JSX.Element {
     };
 
     // ─────────────────────────────────────────────────────────────
-    // Game Physics & Autoplay Logic with Controlled Mistakes
+    // Game Physics & Autoplay Logic
     // ─────────────────────────────────────────────────────────────
     const GROUND_Y = height - 2;
     const DINO_X = 50;
     let dinoY = GROUND_Y - 24 * SCALE;
     let dinoVY = 0;
-    const GRAVITY = 0.62;
-    const JUMP_FORCE = -11.2;
+    const GRAVITY = 0.58;
+    const JUMP_FORCE = -11.6;
     let isJumping = false;
     let runFrame = 0;
     let frameTick = 0;
@@ -294,8 +294,6 @@ export default function DinoRunner(): JSX.Element {
       width: number;
       height: number;
       speed: number;
-      failJump?: "none" | "too_late" | "no_jump" | "too_early";
-      jumpTriggered?: boolean;
     }
 
     let obstacles: Obstacle[] = [];
@@ -326,12 +324,9 @@ export default function DinoRunner(): JSX.Element {
     let gameSpeed = 5.2;
     let score = 0;
     let highScore = 2026;
-    let nextSpawnDistance = 240;
-
-    // Fail orchestration: The AI will make a mistake once score passes targetFailScore
-    let targetFailScore = Math.floor(Math.random() * 350 + 180); // Fails between ~180 and ~530 score
+    let nextSpawnDistance = 280;
     let isGameOver = false;
-    let deathCooldown = 0; // Frames to pause when dead (90 frames = 1.5s)
+    let deathCooldown = 0;
 
     const triggerJump = () => {
       if (!isJumping && !isGameOver) {
@@ -351,13 +346,13 @@ export default function DinoRunner(): JSX.Element {
       dinoY = GROUND_Y - 24 * SCALE;
       dinoVY = 0;
       isJumping = false;
-      targetFailScore = Math.floor(Math.random() * 400 + 200);
-      nextSpawnDistance = 240;
+      nextSpawnDistance = 280;
     };
 
     let isVisible = false;
 
     function drawInitialState() {
+      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
       // Clouds
@@ -402,7 +397,7 @@ export default function DinoRunner(): JSX.Element {
     // Game Loop
     // ─────────────────────────────────────────────────────────────
     const render = () => {
-      if (!isVisible) return;
+      if (!isVisible || !ctx) return;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -456,7 +451,7 @@ export default function DinoRunner(): JSX.Element {
           }
         });
 
-        // Flashy Retro "GAME OVER" Text & Replay Icon
+        // Flashy Retro "GAME OVER" Text
         ctx.fillStyle = "#ff0055";
         ctx.font = "bold 13px monospace";
         ctx.textAlign = "center";
@@ -493,33 +488,17 @@ export default function DinoRunner(): JSX.Element {
         }
       }
 
-      // 4. Autoplay AI Decisions (Calculates jumps & executes planned mistakes)
+      // 4. Autoplay AI Decisions: Jumps with proper clearance
       const incomingObstacle = obstacles.find(
-        (obs) => obs.x > DINO_X && obs.x < DINO_X + (gameSpeed * 22 + 60)
+        (obs) => obs.x > DINO_X && obs.x < DINO_X + (gameSpeed * 22 + 70)
       );
 
       if (incomingObstacle && !isJumping) {
         const distance = incomingObstacle.x - DINO_X;
-
-        if (incomingObstacle.failJump === "no_jump") {
-          // Intentional mistake: Dino fails to react and runs straight into cactus!
-        } else if (incomingObstacle.failJump === "too_late") {
-          // Intentional mistake: Dino jumps way too late (at 18px instead of 65px), colliding mid-air!
-          if (distance <= gameSpeed * 3) {
+        // Perfect lead distance for apex arc jump clearance
+        if (incomingObstacle.type !== "pterodactyl" || incomingObstacle.y > GROUND_Y - 42) {
+          if (distance <= gameSpeed * 17.5) {
             triggerJump();
-          }
-        } else if (incomingObstacle.failJump === "too_early") {
-          // Intentional mistake: Dino jumps too early, landing on top of the cactus!
-          if (distance <= gameSpeed * 20 && !incomingObstacle.jumpTriggered) {
-            incomingObstacle.jumpTriggered = true;
-            triggerJump();
-          }
-        } else {
-          // Normal Clean Jump
-          if (incomingObstacle.type !== "pterodactyl" || incomingObstacle.y > GROUND_Y - 40) {
-            if (distance <= gameSpeed * 12.5) {
-              triggerJump();
-            }
           }
         }
       }
@@ -541,12 +520,12 @@ export default function DinoRunner(): JSX.Element {
       drawMatrix(activeDinoSprite, DINO_X, dinoY, "#00ff66", "#030303", SCALE);
       ctx.shadowBlur = 0;
 
-      // Dino Bounding Box for Collision
+      // Dino Bounding Box for Collision (Generous hitbox matching original Chrome Dino)
       const dinoBox = {
-        x: DINO_X + 6,
-        y: dinoY + 4,
-        w: 22 * SCALE - 12,
-        h: 24 * SCALE - 4,
+        x: DINO_X + 8,
+        y: dinoY + 6,
+        w: 22 * SCALE - 16,
+        h: 24 * SCALE - 8,
       };
 
       // 6. Spawn Obstacles
@@ -555,15 +534,7 @@ export default function DinoRunner(): JSX.Element {
         const rand = Math.random();
         let newObs: Obstacle;
 
-        // Decide if this obstacle should trigger the intentional fail
-        const shouldFail = score >= targetFailScore && obstacles.length === 0;
-        let failType: "none" | "too_late" | "no_jump" | "too_early" = "none";
-        if (shouldFail) {
-          const mistakeRand = Math.random();
-          failType = mistakeRand < 0.4 ? "too_late" : mistakeRand < 0.75 ? "no_jump" : "too_early";
-        }
-
-        if (rand < 0.42) {
+        if (rand < 0.45) {
           newObs = {
             x: width + 20,
             type: "smallCactus",
@@ -571,9 +542,8 @@ export default function DinoRunner(): JSX.Element {
             width: 9 * SCALE,
             height: 18 * SCALE,
             speed: gameSpeed,
-            failJump: failType,
           };
-        } else if (rand < 0.72) {
+        } else if (rand < 0.75) {
           newObs = {
             x: width + 20,
             type: "largeCactus",
@@ -581,9 +551,8 @@ export default function DinoRunner(): JSX.Element {
             width: 14 * SCALE,
             height: 24 * SCALE,
             speed: gameSpeed,
-            failJump: failType,
           };
-        } else if (rand < 0.86) {
+        } else if (rand < 0.88) {
           newObs = {
             x: width + 20,
             type: "doubleCactus",
@@ -591,7 +560,6 @@ export default function DinoRunner(): JSX.Element {
             width: 18 * SCALE,
             height: 18 * SCALE,
             speed: gameSpeed,
-            failJump: failType,
           };
         } else {
           const flyHeight = Math.random() > 0.5 ? GROUND_Y - 32 : GROUND_Y - 46;
@@ -601,13 +569,12 @@ export default function DinoRunner(): JSX.Element {
             y: flyHeight,
             width: 21 * SCALE,
             height: 14 * SCALE,
-            speed: gameSpeed * 1.08,
-            failJump: failType,
+            speed: gameSpeed * 1.05,
           };
         }
 
         obstacles.push(newObs);
-        nextSpawnDistance = Math.random() * 240 + 290;
+        nextSpawnDistance = Math.random() * 260 + 340;
       }
 
       // 7. Update Obstacles & Check Collision
@@ -627,12 +594,12 @@ export default function DinoRunner(): JSX.Element {
           drawMatrix(pFrame, obs.x, obs.y, "#00e5ff", "#000", SCALE);
         }
 
-        // Collision Check Box
+        // Collision Check Box with reasonable inset
         const obsBox = {
-          x: obs.x + 4,
-          y: obs.y + 4,
-          w: obs.width - 8,
-          h: obs.height - 4,
+          x: obs.x + 6,
+          y: obs.y + 6,
+          w: obs.width - 12,
+          h: obs.height - 8,
         };
 
         if (
@@ -641,9 +608,8 @@ export default function DinoRunner(): JSX.Element {
           dinoBox.y < obsBox.y + obsBox.h &&
           dinoBox.y + dinoBox.h > obsBox.y
         ) {
-          // Dino Collision Detected!
           isGameOver = true;
-          deathCooldown = 90; // 1.5 second pause before auto-restarting
+          deathCooldown = 90;
           break;
         }
 
@@ -663,12 +629,22 @@ export default function DinoRunner(): JSX.Element {
       ctx.fillText(`HI ${displayHighScore}  ${displayScore}`, width - 16, 20);
 
       // Progressive speed
-      if (gameSpeed < 8.5) {
-        gameSpeed += 0.0002;
+      if (gameSpeed < 8.0) {
+        gameSpeed += 0.00015;
       }
 
       animationFrameId = requestAnimationFrame(render);
     };
+
+    // ─────────────────────────────────────────────────────────────
+    // Click & Keyboard Jump Support
+    // ─────────────────────────────────────────────────────────────
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" || e.key === "ArrowUp") {
+        triggerJump();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
 
     // ─────────────────────────────────────────────────────────────
     // Intersection Observer (Runs only when in screen)
@@ -700,6 +676,7 @@ export default function DinoRunner(): JSX.Element {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("keydown", handleKeyDown);
       observer.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
