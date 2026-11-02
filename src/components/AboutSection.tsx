@@ -14,7 +14,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const PARTICLES = generateParticles(45);
+const PARTICLES = generateParticles(20);
 
 const TIMELINE = [
   {
@@ -45,8 +45,6 @@ const STATS = [
   { value: "1+", label: "Years" },
 ];
 
-
-
 export default function AboutSection(): JSX.Element {
   const reducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
@@ -58,18 +56,36 @@ export default function AboutSection(): JSX.Element {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const dotsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const [pixelReveal, setPixelReveal] = useState(true);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
+
+    let targetX = 50;
+    let targetY = 50;
+
     const onMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
+      targetX = (e.clientX / window.innerWidth) * 100;
+      targetY = (e.clientY / window.innerHeight) * 100;
+
+      if (!rafId.current) {
+        rafId.current = requestAnimationFrame(() => {
+          if (sectionEl) {
+            sectionEl.style.setProperty("--about-mouse-x", `${targetX.toFixed(2)}%`);
+            sectionEl.style.setProperty("--about-mouse-y", `${targetY.toFixed(2)}%`);
+          }
+          rafId.current = null;
+        });
+      }
     };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -172,14 +188,12 @@ export default function AboutSection(): JSX.Element {
             const isLast = i === cards.length - 1;
             const targetRatio = isLast ? 1.0 : (ratios[i] ?? i / (cards.length - 1));
 
-            // 1. Highlighted green line extends down to target
             tl.to(line, {
               scaleY: targetRatio,
               duration: 0.4,
               ease: "power1.inOut",
             });
 
-            // 2. Exact moment green line touches target -> dot lights up green & card reveals
             if (dot) {
               tl.to(
                 dot,
@@ -256,7 +270,11 @@ export default function AboutSection(): JSX.Element {
       ref={sectionRef}
       id="about"
       className="relative w-full overflow-hidden"
-      style={{ background: "#030303" }}
+      style={{
+        background: "#030303",
+        ["--about-mouse-x" as string]: "50%",
+        ["--about-mouse-y" as string]: "50%",
+      }}
       aria-label="About Vraj"
     >
       {/* Blueprint grid */}
@@ -293,12 +311,14 @@ export default function AboutSection(): JSX.Element {
         aria-hidden="true"
       />
 
-      {/* Cursor glow — continues hero interaction */}
+      {/* Cursor glow — hardware accelerated CSS variable */}
       <div
-        className="absolute inset-0 z-[4] pointer-events-none transition-all duration-300 ease-out"
+        className="absolute inset-0 z-[4] pointer-events-none transition-opacity duration-300 ease-out"
         style={{
-          background: `radial-gradient(circle 420px at ${mousePos.x}% ${mousePos.y}%, rgba(0,255,102,0.1), transparent 70%)`,
+          background:
+            "radial-gradient(circle 420px at var(--about-mouse-x) var(--about-mouse-y), rgba(0,255,102,0.1), transparent 70%)",
           mixBlendMode: "screen",
+          willChange: "background",
         }}
         aria-hidden="true"
       />
@@ -362,7 +382,7 @@ export default function AboutSection(): JSX.Element {
               ABOUT
             </span>
             <span className="text-xs text-zinc-500 font-mono tracking-wider hidden sm:inline-block">
-              // BACKGROUND & PHILOSOPHY
+              // BACKGROUND &amp; PHILOSOPHY
             </span>
           </div>
 
@@ -555,7 +575,7 @@ export default function AboutSection(): JSX.Element {
               {pixelReveal ? (
                 <PixelTransition
                   imgSrc={workspaceImg.src}
-                  gridSize={28}
+                  gridSize={24}
                   duration={1.2}
                   maskId="workspace-pixel-mask"
                   className="w-full h-full"
@@ -577,7 +597,6 @@ export default function AboutSection(): JSX.Element {
             />
           </div>
         </div>
-
 
       </div>
     </section>

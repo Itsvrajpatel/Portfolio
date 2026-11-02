@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 interface PixelTransitionProps {
   imgSrc: string;
@@ -10,59 +10,87 @@ interface PixelTransitionProps {
   maskId?: string;
 }
 
+function pseudoDelay(index: number, maxDuration: number): number {
+  const x = Math.sin((index + 1) * 37.234) * 43758.5453;
+  const rand = x - Math.floor(x);
+  return Number((rand * maxDuration).toFixed(3));
+}
+
 export default function PixelTransition({
   imgSrc,
-  gridSize = 35,
-  duration = 1.5,
+  gridSize = 24,
+  duration = 1.3,
   className = "",
   maskId = "pixel-mask",
 }: PixelTransitionProps) {
-  const [pixels, setPixels] = useState<number[]>([]);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isFullyComplete, setIsFullyComplete] = useState(false);
+
+  // Deterministic delay calculation — guarantees exact SSR & Client parity
+  const pixels = useMemo(() => {
+    const totalPixels = gridSize * gridSize;
+    return Array.from({ length: totalPixels }, (_, i) => pseudoDelay(i, duration));
+  }, [gridSize, duration]);
 
   useEffect(() => {
-    setMounted(true);
-    const totalPixels = gridSize * gridSize;
-    const delays = Array.from({ length: totalPixels }).map(() => Math.random() * duration);
-    setPixels(delays);
-
-    const timeout = setTimeout(() => {
+    const revealTimer = setTimeout(() => {
       setIsRevealed(true);
-    }, 50);
-    return () => clearTimeout(timeout);
-  }, [gridSize, duration]);
+    }, 40);
+
+    // After animation duration completes, switch off the SVG mask to free GPU memory
+    const completeTimer = setTimeout(() => {
+      setIsFullyComplete(true);
+    }, (duration + 0.35) * 1000);
+
+    return () => {
+      clearTimeout(revealTimer);
+      clearTimeout(completeTimer);
+    };
+  }, [duration]);
+
+  // Once fully complete, render a clean native SVG image without active mask computation overhead
+  if (isFullyComplete) {
+    return (
+      <svg className={`w-full h-full ${className}`} style={{ overflow: "visible" }} suppressHydrationWarning>
+        <image
+          href={imgSrc}
+          xlinkHref={imgSrc}
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          preserveAspectRatio="xMidYMax slice"
+        />
+      </svg>
+    );
+  }
 
   const step = 1 / gridSize;
 
   return (
-    <svg className={`w-full h-full ${className}`} style={{ overflow: "visible" }}>
+    <svg className={`w-full h-full ${className}`} style={{ overflow: "visible", willChange: "transform" }} suppressHydrationWarning>
       <defs>
         <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-          {!mounted || pixels.length === 0 ? (
-            /* Fallback mask: full white rectangle so image is 100% visible on SSR / initial mount */
-            <rect x="0" y="0" width="1" height="1" fill="white" />
-          ) : (
-            pixels.map((delay, i) => {
-              const x = (i % gridSize) * step;
-              const y = Math.floor(i / gridSize) * step;
-              return (
-                <rect
-                  key={i}
-                  x={x}
-                  y={y}
-                  width={step + 0.002}
-                  height={step + 0.002}
-                  fill="white"
-                  style={{
-                    opacity: isRevealed ? 1 : 0,
-                    transition: `opacity 0.25s linear`,
-                    transitionDelay: `${delay}s`,
-                  }}
-                />
-              );
-            })
-          )}
+          {pixels.map((delay, i) => {
+            const x = (i % gridSize) * step;
+            const y = Math.floor(i / gridSize) * step;
+            return (
+              <rect
+                key={i}
+                x={x}
+                y={y}
+                width={step + 0.002}
+                height={step + 0.002}
+                fill="white"
+                style={{
+                  opacity: isRevealed ? 1 : 0,
+                  transition: `opacity 0.22s linear`,
+                  transitionDelay: `${delay}s`,
+                  willChange: "opacity",
+                }}
+              />
+            );
+          })}
         </mask>
       </defs>
       <image
