@@ -22,7 +22,20 @@ const PARTICLES = generateParticles(22);
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [websiteOpen, setWebsiteOpen] = useState(false);
   const rafId = useRef<number | null>(null);
+
+  const handlePreloaderOpen = () => {
+    setWebsiteOpen(true);
+  };
+
+  const handlePreloaderComplete = () => {
+    if (typeof window !== "undefined") {
+      import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+        ScrollTrigger.refresh();
+      });
+    }
+  };
 
   useEffect(() => {
     const heroEl = heroRef.current;
@@ -79,7 +92,7 @@ export default function Home() {
 
   return (
     <>
-      <Preloader />
+      <Preloader onOpen={handlePreloaderOpen} onComplete={handlePreloaderComplete} />
       <SmoothScroll />
 
       <main
@@ -125,7 +138,13 @@ export default function Home() {
         />
 
         {/* ── Header · Spreads on hero, shrinks to pill on scroll ──────────── */}
-        <header className="fixed top-0 left-0 right-0 z-[30] pointer-events-none">
+        <header
+          className="fixed top-0 left-0 right-0 z-[30] pointer-events-none transition-all duration-700 ease-out"
+          style={{
+            transform: websiteOpen ? "translateY(0)" : "translateY(-24px)",
+            opacity: websiteOpen ? 1 : 0,
+          }}
+        >
           <div className="relative flex items-center justify-center" style={{ height: "72px", paddingLeft: "40px", paddingRight: "40px" }}>
 
             {/* Logo — top-left, same row as nav, hidden once scrolled */}
@@ -193,10 +212,13 @@ export default function Home() {
 
         {/* ── LAYER 10 · Large typography — hardware accelerated parallax ─── */}
         <div
-          className="absolute inset-0 z-[10] flex flex-col items-center justify-center font-bold tracking-tighter select-none pointer-events-none"
+          className="absolute inset-0 z-[10] flex flex-col items-center justify-center font-bold tracking-tighter select-none pointer-events-none transition-all duration-1000 ease-out"
           style={{
-            transform: "translate3d(var(--hero-offset-x), var(--hero-offset-y), 0)",
-            willChange: "transform",
+            transform: websiteOpen
+              ? "translate3d(var(--hero-offset-x), var(--hero-offset-y), 0) scale(1)"
+              : "translate3d(var(--hero-offset-x), calc(var(--hero-offset-y) + 36px), 0) scale(0.95)",
+            opacity: websiteOpen ? 1 : 0,
+            willChange: "transform, opacity",
           }}
         >
           <h1 className="text-[20vw] leading-[0.75] text-[#009933] opacity-60">
@@ -208,8 +230,14 @@ export default function Home() {
         </div>
 
         {/* ── LAYER 15 · Ground contact & ambient shadows ───────────────────── */}
-        <div className="absolute bottom-0 left-1/2 z-[15] -translate-x-1/2 w-[420px] h-[50px] bg-black/90 blur-2xl rounded-[100%] pointer-events-none" />
-        <div className="absolute bottom-2 left-1/2 z-[15] -translate-x-1/2 w-[320px] h-[35px] bg-[#00ff66]/15 blur-xl rounded-[100%] pointer-events-none" />
+        <div
+          className="absolute bottom-0 left-1/2 z-[15] -translate-x-1/2 w-[420px] h-[50px] bg-black/90 blur-2xl rounded-[100%] pointer-events-none transition-opacity duration-1000 ease-out"
+          style={{ opacity: websiteOpen ? 1 : 0 }}
+        />
+        <div
+          className="absolute bottom-2 left-1/2 z-[15] -translate-x-1/2 w-[320px] h-[35px] bg-[#00ff66]/15 blur-xl rounded-[100%] pointer-events-none transition-opacity duration-1000 ease-out"
+          style={{ opacity: websiteOpen ? 1 : 0 }}
+        />
 
         {/* ── LAYER 20 · Character — counter-parallax to typography ───────── */}
         <div
@@ -224,13 +252,17 @@ export default function Home() {
               gridSize={24}
               duration={1.3}
               imgSrc={characterImg.src}
+              startAnimation={websiteOpen}
               className="[filter:drop-shadow(0_0_30px_rgba(0,255,102,0.2))_drop-shadow(0_20px_35px_rgba(0,0,0,0.85))] pointer-events-auto"
             />
           </div>
         </div>
 
         {/* ── LAYER 19 · Floating particles — beneath character ───────────── */}
-        <div className="absolute inset-0 z-[19] pointer-events-none overflow-hidden">
+        <div
+          className="absolute inset-0 z-[19] pointer-events-none overflow-hidden transition-opacity duration-1000 ease-out"
+          style={{ opacity: websiteOpen ? 1 : 0 }}
+        >
           {PARTICLES.map((p) => (
             <span
               key={p.id}

@@ -8,6 +8,7 @@ interface PixelTransitionProps {
   duration?: number;
   className?: string;
   maskId?: string;
+  startAnimation?: boolean;
 }
 
 function pseudoDelay(index: number, maxDuration: number): number {
@@ -22,6 +23,7 @@ export default function PixelTransition({
   duration = 1.3,
   className = "",
   maskId = "pixel-mask",
+  startAnimation = true,
 }: PixelTransitionProps) {
   const [isRevealed, setIsRevealed] = useState(false);
   const [isFullyComplete, setIsFullyComplete] = useState(false);
@@ -33,6 +35,8 @@ export default function PixelTransition({
   }, [gridSize, duration]);
 
   useEffect(() => {
+    if (!startAnimation) return;
+
     const revealTimer = setTimeout(() => {
       setIsRevealed(true);
     }, 40);
@@ -46,7 +50,7 @@ export default function PixelTransition({
       clearTimeout(revealTimer);
       clearTimeout(completeTimer);
     };
-  }, [duration]);
+  }, [startAnimation, duration]);
 
   // Once fully complete, render a clean native SVG image without active mask computation overhead
   if (isFullyComplete) {
