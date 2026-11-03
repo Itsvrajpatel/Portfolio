@@ -2,60 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-
-import aiAgentsImg from "@/assets/services/ai-agents.jpg";
-import saasMvpImg from "@/assets/services/saas-mvp.jpg";
-import webDevImg from "@/assets/services/web-dev.jpg";
-import uiUxImg from "@/assets/services/ui-ux.jpg";
-
-interface ServiceItem {
-  id: string;
-  title: string;
-  description: string;
-  duration: string;
-  stack: string;
-  deliverables: string;
-  image: any;
-}
-
-const SERVICES: ServiceItem[] = [
-  {
-    id: "design-services",
-    title: "DESIGN SERVICES",
-    description: "Our professional design experts can help you craft pixel-perfect wireframes, design systems, and responsive interactive prototypes for your project.",
-    duration: "2 WEEKS",
-    stack: "FIGMA / THREEJS",
-    deliverables: "DESIGN SYSTEM",
-    image: uiUxImg,
-  },
-  {
-    id: "ai-services",
-    title: "AI & AUTOMATION SERVICES",
-    description: "Custom autonomous AI agents, RAG architectures, LLM fine-tuning, and intelligent workflow automations built to save hundreds of hours.",
-    duration: "3 WEEKS",
-    stack: "PYTHON / LANGCHAIN",
-    deliverables: "CUSTOM AI AGENTS",
-    image: aiAgentsImg,
-  },
-  {
-    id: "saas-services",
-    title: "SAAS MVP SERVICES",
-    description: "Production-ready SaaS platforms engineered from wireframe to launch with multi-tenant auth, billing, and scalable database infrastructure.",
-    duration: "4 WEEKS",
-    stack: "NEXT.JS / POSTGRES",
-    deliverables: "PRODUCTION SAAS",
-    image: saasMvpImg,
-  },
-  {
-    id: "pro-services",
-    title: "PRO WEB SERVICES",
-    description: "High-performance API-heavy web applications with real-time sync, custom micro-animations, and responsive modern layouts.",
-    duration: "2 WEEKS",
-    stack: "REACT / TYPESCRIPT",
-    deliverables: "FULL-STACK WEB APP",
-    image: webDevImg,
-  },
-];
+import Link from "next/link";
+import { SERVICES } from "@/data/servicesData";
 
 const mono = "var(--font-jetbrains-mono, 'JetBrains Mono', ui-monospace, monospace)";
 
@@ -106,7 +54,7 @@ export default function ServicesSection(): JSX.Element {
               SERVICES
             </span>
             <span className="text-xs text-zinc-500 font-mono tracking-wider hidden sm:inline-block">
-              // CAPABILITIES & SPECIALIZATIONS
+              // CLICK ANY SERVICE TO VIEW IN-DEPTH ARCHITECTURE & SPECS
             </span>
           </div>
 
@@ -214,15 +162,15 @@ export default function ServicesSection(): JSX.Element {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Interactive Services List */}
+          {/* RIGHT COLUMN: Interactive Services List with Links */}
           <div className="lg:col-span-7 flex flex-col divide-y divide-white/10 border-t border-b border-white/10">
             {SERVICES.map((service, index) => {
               const isActive = index === activeIndex;
               return (
-                <div
+                <Link
                   key={service.id}
+                  href={`/services/${service.id}`}
                   onMouseEnter={() => setActiveIndex(index)}
-                  onClick={() => setActiveIndex(index)}
                   className={`group relative py-8 px-4 sm:px-6 cursor-pointer transition-all duration-300 flex items-center justify-between ${
                     isActive ? "bg-white/[0.03]" : "hover:bg-white/[0.015]"
                   }`}
@@ -238,6 +186,15 @@ export default function ServicesSection(): JSX.Element {
 
                   {/* Service Text details */}
                   <div className="flex-1 pr-6 sm:pr-10">
+                    <div className="flex items-center gap-3 mb-1.5" style={{ fontFamily: mono }}>
+                      <span className="text-[11px] text-[#00ff66]/80 font-semibold tracking-wider">
+                        {service.badge}
+                      </span>
+                      <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
+                        // {service.duration}
+                      </span>
+                    </div>
+
                     <h3
                       className={`text-xl sm:text-2xl md:text-3xl font-bold tracking-tight uppercase transition-colors duration-300 ${
                         isActive ? "text-white" : "text-white/60 group-hover:text-white/90"
@@ -253,27 +210,40 @@ export default function ServicesSection(): JSX.Element {
                     </p>
                   </div>
 
-                  {/* Right Arrow chevron indicator */}
-                  <div className="flex-shrink-0">
-                    <svg
-                      className={`w-7 h-7 sm:w-9 sm:h-9 transition-all duration-300 ease-out transform ${
-                        isActive
-                          ? "text-[#00ff66] translate-x-2 scale-110"
-                          : "text-white/30 group-hover:text-white/70 group-hover:translate-x-1"
+                  {/* Right Arrow chevron indicator + Open Page indicator */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span
+                      className={`hidden sm:inline-block text-[11px] font-mono tracking-wider uppercase transition-all duration-300 ${
+                        isActive ? "text-[#00ff66] opacity-100" : "text-zinc-600 opacity-0 group-hover:opacity-60"
                       }`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
+                      style={{ fontFamily: mono }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
+                      VIEW PAGE
+                    </span>
+
+                    <div
+                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full border flex items-center justify-center transition-all duration-300 ${
+                        isActive
+                          ? "border-[#00ff66]/50 bg-[#00ff66]/10 text-[#00ff66] shadow-[0_0_15px_rgba(0,255,102,0.2)] scale-105"
+                          : "border-white/10 text-white/40 group-hover:border-white/30 group-hover:text-white"
+                      }`}
+                    >
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M7 17L17 7M17 7H7M17 7V17"
+                        />
+                      </svg>
+                    </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
