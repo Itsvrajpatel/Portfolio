@@ -2,85 +2,21 @@
 
 import React, { useState } from "react";
 import ProjectsCarousel, { ProjectItem } from "./ProjectsCarousel";
+import { PROJECTS_DATA } from "@/data/projectsData";
 
-import aiAgentImg from "@/assets/projects/ai-agent.jpg";
-import saasPlatformImg from "@/assets/projects/saas-platform.jpg";
-import cryptoTerminalImg from "@/assets/projects/crypto-terminal.jpg";
-import creativeStudioImg from "@/assets/projects/creative-studio.jpg";
-import ragEngineImg from "@/assets/projects/rag-engine.jpg";
-
-const PROJECTS: ProjectItem[] = [
-  {
-    id: "neuro-agent",
-    title: "Neuro-Agent :: Autonomous Workflow Core",
-    category: "AI AGENTS & RAG",
-    tagline: "High-throughput multi-agent execution pipeline",
-    description:
-      "Enterprise autonomous agent system coordinating distributed LLM reasoning workers with live vector memories, self-correcting code synthesis, and sub-15ms streaming latency.",
-    year: "2026",
-    stack: ["PYTHON", "LANGCHAIN", "FASTAPI", "VECTOR DB", "NEXT.JS"],
-    metrics: "14ms Latency / 96.7% Accuracy",
-    image: aiAgentImg,
-    link: "#",
-    github: "#",
-  },
-  {
-    id: "aether-saas",
-    title: "Aether :: High-Performance SaaS Engine",
-    category: "SAAS MVP PLATFORM",
-    tagline: "Scalable multi-tenant recurring revenue infrastructure",
-    description:
-      "Full-stack production SaaS dashboard with real-time financial tracking, Stripe automated billing, usage-based telemetry, and instantaneous Postgres query optimization.",
-    year: "2025",
-    stack: ["NEXT.JS 15", "POSTGRESQL", "PRISMA", "TAILWIND", "STRIPE"],
-    metrics: "$140k+ ARR Handled / 99.99% Uptime",
-    image: saasPlatformImg,
-    link: "#",
-    github: "#",
-  },
-  {
-    id: "cybercrypt-dex",
-    title: "CyberCrypt :: Real-Time Trading Terminal",
-    category: "DEFI & WEB3 TERMINAL",
-    tagline: "Sub-millisecond orderbook & liquidity analytics",
-    description:
-      "Modern dark-mode Web3 trading terminal featuring WebSocket live depth chart streaming, algorithmic order routing, and instant wallet execution.",
-    year: "2025",
-    stack: ["REACT", "TYPESCRIPT", "WEBSOCKETS", "ETHERS.JS", "GSAP"],
-    metrics: "12.4 ETH Volume / 0-lag Charting",
-    image: cryptoTerminalImg,
-    link: "#",
-    github: "#",
-  },
-  {
-    id: "neon-genesis",
-    title: "Neon Genesis :: Generative 3D Studio",
-    category: "CREATIVE TECH & 3D",
-    tagline: "Browser-based generative mesh & shader engine",
-    description:
-      "Interactive 3D sculpting and procedural shader canvas powered by WebGL and Three.js with real-time parametric deformation and timeline keyframe animation.",
-    year: "2024",
-    stack: ["THREE.JS", "WEBGL", "GLSL SHADERS", "REACT THREE FIBER"],
-    metrics: "60 FPS Render / 8k Export",
-    image: creativeStudioImg,
-    link: "#",
-    github: "#",
-  },
-  {
-    id: "neural-vortex",
-    title: "Neural Vortex :: RAG Knowledge Base",
-    category: "ENTERPRISE AI SEARCH",
-    tagline: "Semantic cluster indexing & generative retrieval",
-    description:
-      "Document ingestion and clustering engine indexing 50,000+ complex technical documents with hybrid dense-sparse vector search and hallucination mitigation guards.",
-    year: "2024",
-    stack: ["PINECONE", "OPENAI", "PYTHON", "REACT 19", "TAILWIND"],
-    metrics: "50k+ Docs Clustered / 98% Relevancy",
-    image: ragEngineImg,
-    link: "#",
-    github: "#",
-  },
-];
+const PROJECTS: ProjectItem[] = PROJECTS_DATA.map((p) => ({
+  id: p.id,
+  title: p.title,
+  category: p.category,
+  tagline: p.tagline,
+  description: p.overview,
+  year: p.year,
+  stack: p.techStack,
+  metrics: p.metrics,
+  image: p.image,
+  link: `/work/${p.id}`,
+  github: p.githubUrl,
+}));
 
 const mono = "var(--font-jetbrains-mono, 'JetBrains Mono', ui-monospace, monospace)";
 
@@ -120,7 +56,6 @@ export default function ProjectsSection(): JSX.Element {
 
       {/* Section Content */}
       <div className="relative z-[10] max-w-[1300px] mx-auto px-6 md:px-10 lg:px-16">
-        
         {/* Section Header matching Skills & Process style */}
         <div className="mb-12 sm:mb-16">
           <div className="flex items-center gap-3 mb-5">
@@ -132,7 +67,7 @@ export default function ProjectsSection(): JSX.Element {
               WORK
             </span>
             <span className="text-xs text-zinc-500 font-mono tracking-wider hidden sm:inline-block">
-              // FEATURED SYSTEMS & APPS
+              // SELECTED SOFTWARE PROJECTS & CASE STUDIES
             </span>
           </div>
 
