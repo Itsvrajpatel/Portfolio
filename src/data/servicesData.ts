@@ -40,7 +40,7 @@ export interface ServiceItem {
   stack: string;
   deliverables: string;
   image: StaticImageData;
-  badge: string;
+  badge?: string;
   highlights: string[];
   features: ServiceFeature[];
   process: ServiceProcessStep[];
@@ -62,7 +62,6 @@ export const SERVICES: ServiceItem[] = [
     stack: "FIGMA / THREEJS / TAILWIND",
     deliverables: "COMPREHENSIVE DESIGN SYSTEM & PROTOTYPES",
     image: uiUxImg,
-    badge: "SYS.DESIGN // 01",
     highlights: [
       "Pixel-perfect Figma auto-layout design files",
       "Comprehensive design token library (colors, typography, spacing)",
@@ -161,7 +160,6 @@ export const SERVICES: ServiceItem[] = [
     stack: "PYTHON / LANGCHAIN / OPENAI / VECTOR DB",
     deliverables: "CUSTOM AI AGENTS & RAG PIPELINES",
     image: aiAgentsImg,
-    badge: "SYS.AI // 02",
     highlights: [
       "Custom multi-agent orchestration with memory & tool calling",
       "Enterprise RAG architecture with semantic chunking & reranking",
@@ -260,7 +258,6 @@ export const SERVICES: ServiceItem[] = [
     stack: "NEXT.JS / POSTGRES / PRISMA / STRIPE",
     deliverables: "PRODUCTION SAAS WEB APP",
     image: saasMvpImg,
-    badge: "SYS.SAAS // 03",
     highlights: [
       "Complete multi-tenant workspace & organization switching",
       "Stripe / LemonSqueezy subscription tiers, coupons & customer portal",
@@ -359,7 +356,6 @@ export const SERVICES: ServiceItem[] = [
     stack: "REACT / TYPESCRIPT / GSAP / NEXT.JS",
     deliverables: "FULL-STACK HIGH PERFORMANCE WEB APP",
     image: webDevImg,
-    badge: "SYS.WEB // 04",
     highlights: [
       "Silky smooth 60fps animations with GSAP ScrollTrigger & Lenis",
       "95+ Google Lighthouse scores across Performance, Accessibility & SEO",

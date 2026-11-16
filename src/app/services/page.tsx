@@ -98,10 +98,12 @@ export default function ServicesIndexPage() {
               />
 
               <div>
-                <div className="flex items-center justify-between mb-6" style={{ fontFamily: mono }}>
-                  <span className="text-xs text-[#00ff66] font-semibold tracking-wider">
-                    {service.badge}
-                  </span>
+                <div className={`flex items-center ${service.badge ? "justify-between" : "justify-end"} mb-6`} style={{ fontFamily: mono }}>
+                  {service.badge && (
+                    <span className="text-xs text-[#00ff66] font-semibold tracking-wider">
+                      {service.badge}
+                    </span>
+                  )}
                   <span className="text-xs text-zinc-500 flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5" /> {service.duration}
                   </span>

@@ -146,18 +146,30 @@ export default function ServiceDetailPage({ params }: ServicePageProps) {
         <section className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-6 pb-16">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-12 border-b border-white/10">
             <div className="max-w-3xl">
-              {/* Badge */}
+              {/* Badge & Timeline */}
               <div className="flex items-center gap-3 mb-6">
-                <span
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#00ff66]/40 bg-[#00ff66]/10 text-[#00ff66] text-xs font-semibold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(0,255,102,0.15)]"
-                  style={{ fontFamily: mono }}
-                >
-                  <span className="w-2 h-2 rounded-full bg-[#00ff66] shadow-[0_0_8px_#00ff66] animate-pulse" />
-                  {service.badge}
-                </span>
-                <span className="text-xs text-zinc-500 font-mono tracking-wider">
-                  // {service.duration} ESTIMATED TIMELINE
-                </span>
+                {service.badge ? (
+                  <>
+                    <span
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#00ff66]/40 bg-[#00ff66]/10 text-[#00ff66] text-xs font-semibold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(0,255,102,0.15)]"
+                      style={{ fontFamily: mono }}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-[#00ff66] shadow-[0_0_8px_#00ff66] animate-pulse" />
+                      {service.badge}
+                    </span>
+                    <span className="text-xs text-zinc-500 font-mono tracking-wider">
+                      // {service.duration} ESTIMATED TIMELINE
+                    </span>
+                  </>
+                ) : (
+                  <span
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#00ff66]/40 bg-[#00ff66]/10 text-[#00ff66] text-xs font-semibold tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(0,255,102,0.15)]"
+                    style={{ fontFamily: mono }}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-[#00ff66] shadow-[0_0_8px_#00ff66] animate-pulse" />
+                    {service.duration} ESTIMATED TIMELINE
+                  </span>
+                )}
               </div>
 
               {/* Title & Subtitle */}
@@ -557,7 +569,7 @@ export default function ServiceDetailPage({ params }: ServicePageProps) {
                 style={{ fontFamily: mono }}
               >
                 <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-pulse" />
-                INITIATE PROJECT // {service.badge}
+                {service.badge ? `INITIATE PROJECT // ${service.badge}` : "INITIATE PROJECT"}
               </span>
 
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">

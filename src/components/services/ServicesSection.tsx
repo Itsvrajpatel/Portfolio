@@ -187,11 +187,13 @@ export default function ServicesSection(): JSX.Element {
                   {/* Service Text details */}
                   <div className="flex-1 pr-6 sm:pr-10">
                     <div className="flex items-center gap-3 mb-1.5" style={{ fontFamily: mono }}>
-                      <span className="text-[11px] text-[#00ff66]/80 font-semibold tracking-wider">
-                        {service.badge}
-                      </span>
+                      {service.badge && (
+                        <span className="text-[11px] text-[#00ff66]/80 font-semibold tracking-wider">
+                          {service.badge}
+                        </span>
+                      )}
                       <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
-                        // {service.duration}
+                        {service.badge ? `// ${service.duration}` : service.duration}
                       </span>
                     </div>
 
