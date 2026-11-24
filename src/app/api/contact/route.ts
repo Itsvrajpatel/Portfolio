@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     const toAddress =
       process.env.CONTACT_EMAIL ||
       process.env.RESEND_TO_EMAIL ||
-      "contact@vrajpatel.dev";
+      "vrajp9013@gmail.com";
 
     const cleanName = name.trim();
     const cleanEmail = email.trim();
