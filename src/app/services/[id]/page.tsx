@@ -87,22 +87,16 @@ export default function ServiceDetailPage({ params }: ServicePageProps) {
         {/* ── Fixed Floating Pill Navbar (identical to homepage & project pages) ──────────── */}
         <Navbar activeSection="Services" />
 
-        {/* ── Breadcrumb & Top Indicator ────────────────────────────────────── */}
-        <div className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-24 sm:pt-28 pb-4">
-          <div
-            className="flex items-center gap-2 text-xs font-mono text-zinc-500 tracking-wider"
+        {/* ── Back to Services Link ─────────────────────────────────────────── */}
+        <div className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-24 sm:pt-28 pb-3">
+          <Link
+            href="/#services"
+            className="group inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors tracking-wider"
             style={{ fontFamily: mono }}
           >
-            <Link href="/" className="hover:text-white transition-colors">
-              HOME
-            </Link>
-            <span>/</span>
-            <Link href="/#services" className="hover:text-white transition-colors">
-              SERVICES
-            </Link>
-            <span>/</span>
-            <span className="text-[#00ff66] font-semibold">{service.id.toUpperCase()}</span>
-          </div>
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#00ff66]" />
+            <span>Back to Services</span>
+          </Link>
         </div>
 
         {/* ── HERO BANNER ──────────────────────────────────────────────────── */}

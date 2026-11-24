@@ -187,7 +187,7 @@ ${cleanDetails}
       from: fromAddress,
       to: [toAddress],
       replyTo: cleanEmail,
-      subject: `[Portfolio Brief] ${cleanProjectType} - from ${cleanName}`,
+      subject: `${cleanProjectType} - from ${cleanName}`,
       html: htmlContent,
       text: textContent,
     });
