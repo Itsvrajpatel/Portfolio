@@ -13,6 +13,7 @@ import ScannerMarquee from "@/components/ScannerMarquee";
 import Preloader from "@/components/Preloader";
 import SmoothScroll from "@/components/SmoothScroll";
 import { generateParticles } from "@/lib/particles";
+import { isPreloaderAlreadyShown } from "@/lib/preloaderState";
 
 // ---------------------------------------------------------------------------
 // 22 Lightweight particles for smooth, low-overhead ambient atmosphere
@@ -22,7 +23,7 @@ const PARTICLES = generateParticles(22);
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [websiteOpen, setWebsiteOpen] = useState(false);
+  const [websiteOpen, setWebsiteOpen] = useState(() => isPreloaderAlreadyShown());
   const rafId = useRef<number | null>(null);
 
   const handlePreloaderOpen = () => {
@@ -36,6 +37,17 @@ export default function Home() {
       });
     }
   };
+
+  useEffect(() => {
+    if (isPreloaderAlreadyShown()) {
+      setWebsiteOpen(true);
+      if (typeof window !== "undefined") {
+        import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+          ScrollTrigger.refresh();
+        });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const heroEl = heroRef.current;

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import characterImg from "@/assets/character.png";
+import { isPreloaderAlreadyShown, markPreloaderAsShown } from "@/lib/preloaderState";
 
 interface PreloaderProps {
   onOpen?: () => void;
@@ -19,10 +20,11 @@ const BOOT_LOGS = [
 const mono = "var(--font-jetbrains-mono, 'JetBrains Mono', ui-monospace, monospace)";
 
 export default function Preloader({ onOpen, onComplete }: PreloaderProps) {
+  const [alreadyShown] = useState(() => isPreloaderAlreadyShown());
   const [progress, setProgress] = useState(0);
   const [logIndex, setLogIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isComplete, setIsComplete] = useState(() => isPreloaderAlreadyShown());
 
   const onOpenRef = useRef(onOpen);
   onOpenRef.current = onOpen;
@@ -31,6 +33,17 @@ export default function Preloader({ onOpen, onComplete }: PreloaderProps) {
   onCompleteRef.current = onComplete;
 
   useEffect(() => {
+    if (alreadyShown) {
+      document.body.style.overflow = "";
+      if (onOpenRef.current) {
+        onOpenRef.current();
+      }
+      if (onCompleteRef.current) {
+        onCompleteRef.current();
+      }
+      return;
+    }
+
     // Lock scrolling while preloader runs
     document.body.style.overflow = "hidden";
 
@@ -102,6 +115,7 @@ export default function Preloader({ onOpen, onComplete }: PreloaderProps) {
       // Hold 100% briefly so the user sees "100% // SYSTEM NOMINAL"
       const openTimer = setTimeout(() => {
         setIsExiting(true);
+        markPreloaderAsShown();
         if (onOpenRef.current) {
           onOpenRef.current();
         }
@@ -110,6 +124,7 @@ export default function Preloader({ onOpen, onComplete }: PreloaderProps) {
         const completeTimer = setTimeout(() => {
           setIsComplete(true);
           document.body.style.overflow = "";
+          markPreloaderAsShown();
           if (onCompleteRef.current) {
             onCompleteRef.current();
           }
@@ -122,7 +137,7 @@ export default function Preloader({ onOpen, onComplete }: PreloaderProps) {
     }
   }, [progress, isExiting]);
 
-  if (isComplete) return null;
+  if (isComplete || alreadyShown) return null;
 
   return (
     <div

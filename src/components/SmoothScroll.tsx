@@ -4,9 +4,14 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { markPreloaderAsShown } from "@/lib/preloaderState";
 
 export default function SmoothScroll() {
   useEffect(() => {
+    // If user enters on any subpage directly, mark preloader as completed
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      markPreloaderAsShown();
+    }
     // Disable if reduced motion is requested
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
