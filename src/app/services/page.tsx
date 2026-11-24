@@ -4,7 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { SERVICES } from "@/data/servicesData";
 import SmoothScroll from "@/components/SmoothScroll";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Layers, Clock, Code2 } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import { ArrowRight, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "All Services | Vraj Patel Portfolio",
@@ -32,34 +33,11 @@ export default function ServicesIndexPage() {
           aria-hidden="true"
         />
 
-        {/* Header */}
-        <header className="sticky top-0 left-0 right-0 z-40 bg-[#030303]/80 backdrop-blur-xl border-b border-white/[0.08]">
-          <div className="max-w-[1300px] mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-3 text-white hover:text-[#00ff66] transition-colors duration-200"
-            >
-              <span
-                className="text-base font-bold tracking-wider select-none text-white hover:text-[#00ff66] transition-colors"
-                style={{ fontFamily: mono }}
-              >
-                &lt;VRAJ /&gt;
-              </span>
-            </Link>
-
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-[#00ff66]/40 bg-white/[0.03] text-white text-xs font-mono tracking-wider transition-all"
-              style={{ fontFamily: mono }}
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>BACK TO HOME</span>
-            </Link>
-          </div>
-        </header>
+        {/* ── Fixed Floating Pill Navbar (identical to homepage & project pages) ──────────── */}
+        <Navbar activeSection="Services" />
 
         {/* Hero */}
-        <div className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-16 pb-12">
+        <div className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-24 sm:pt-28 pb-12">
           <div className="flex items-center gap-3 mb-5">
             <span
               className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-[#00ff66]/40 bg-[#00ff66]/10 text-[#00ff66] text-xs font-semibold tracking-[0.2em] uppercase"

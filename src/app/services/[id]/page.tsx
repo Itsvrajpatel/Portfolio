@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SERVICES, getServiceById, getAllServiceIds } from "@/data/servicesData";
 import SmoothScroll from "@/components/SmoothScroll";
+import Navbar from "@/components/Navbar";
 import {
   ArrowLeft,
   ArrowRight,
@@ -83,8 +84,11 @@ export default function ServiceDetailPage({ params }: ServicePageProps) {
           aria-hidden="true"
         />
 
+        {/* ── Fixed Floating Pill Navbar (identical to homepage & project pages) ──────────── */}
+        <Navbar activeSection="Services" />
+
         {/* ── Breadcrumb & Top Indicator ────────────────────────────────────── */}
-        <div className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-10 sm:pt-14 pb-4">
+        <div className="relative z-10 max-w-[1300px] mx-auto px-6 md:px-10 pt-24 sm:pt-28 pb-4">
           <div
             className="flex items-center gap-2 text-xs font-mono text-zinc-500 tracking-wider"
             style={{ fontFamily: mono }}
