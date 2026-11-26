@@ -120,6 +120,47 @@ export default function Navbar({ activeSection = "Work" }: NavbarProps): JSX.Ele
             );
           })}
         </nav>
+
+        {/* Resume — top-right corner, animates to pill on scroll just like middle nav */}
+        <div className="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 pointer-events-auto flex items-center">
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto flex items-center justify-center text-[11px] font-mono font-medium tracking-widest uppercase transition-all duration-500 ease-[cubic-bezier(.4,0,.2,1)] select-none"
+            style={{
+              height: scrolled ? "38px" : "auto",
+              paddingLeft: scrolled ? "20px" : "0px",
+              paddingRight: scrolled ? "20px" : "0px",
+              borderRadius: "999px",
+              background: scrolled ? "rgba(18,18,18,0.65)" : "transparent",
+              backdropFilter: scrolled ? "blur(18px)" : "blur(0px)",
+              WebkitBackdropFilter: scrolled ? "blur(18px)" : "blur(0px)",
+              border: scrolled ? "1px solid #2A2A2A" : "1px solid transparent",
+              boxShadow: scrolled ? "0 10px 30px rgba(0,0,0,0.5)" : "none",
+              color: scrolled ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.85)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#00ff66";
+              if (scrolled) {
+                e.currentTarget.style.borderColor = "rgba(0,255,102,0.45)";
+                e.currentTarget.style.background = "rgba(28,28,28,0.75)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = scrolled ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.85)";
+              if (scrolled) {
+                e.currentTarget.style.borderColor = "#2A2A2A";
+                e.currentTarget.style.background = "rgba(18,18,18,0.65)";
+                e.currentTarget.style.transform = "translateY(0px)";
+              }
+            }}
+            aria-label="Resume"
+          >
+            RESUME
+          </a>
+        </div>
       </div>
     </header>
   );

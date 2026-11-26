@@ -157,19 +157,21 @@ export default function Home() {
             opacity: websiteOpen ? 1 : 0,
           }}
         >
-          <div className="relative flex items-center justify-center" style={{ height: "72px", paddingLeft: "40px", paddingRight: "40px" }}>
+          <div className="relative flex items-center justify-center px-6 md:px-10" style={{ height: "72px" }}>
 
             {/* Logo — top-left, same row as nav, hidden once scrolled */}
-            {!scrolled && (
-              <span
-                className="absolute left-10 text-[13px] font-semibold tracking-wider text-white select-none pointer-events-auto"
-                style={{ fontFamily: "monospace" }}
-              >
-                &lt;VRAJ /&gt;
-              </span>
-            )}
+            <span
+              className={`absolute left-6 sm:left-10 text-[13px] font-semibold tracking-wider select-none pointer-events-auto transition-all duration-500 ${
+                scrolled
+                  ? "opacity-0 -translate-x-4 pointer-events-none"
+                  : "opacity-100 translate-x-0 text-white"
+              }`}
+              style={{ fontFamily: "monospace" }}
+            >
+              &lt;VRAJ /&gt;
+            </span>
 
-            {/* Nav — centered in the same row */}
+            {/* Nav — centered in the same row, shrinks to pill on scroll */}
             <nav
               className="pointer-events-auto flex items-center transition-all duration-500 ease-[cubic-bezier(.4,0,.2,1)]"
               style={{
@@ -218,6 +220,47 @@ export default function Home() {
                 </a>
               ))}
             </nav>
+
+            {/* Resume — top-right corner, animates to pill on scroll just like middle nav */}
+            <div className="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 pointer-events-auto flex items-center">
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pointer-events-auto flex items-center justify-center text-[11px] font-mono font-medium tracking-widest uppercase transition-all duration-500 ease-[cubic-bezier(.4,0,.2,1)] select-none"
+                style={{
+                  height: scrolled ? "38px" : "auto",
+                  paddingLeft: scrolled ? "20px" : "0px",
+                  paddingRight: scrolled ? "20px" : "0px",
+                  borderRadius: "999px",
+                  background: scrolled ? "rgba(18,18,18,0.65)" : "transparent",
+                  backdropFilter: scrolled ? "blur(18px)" : "blur(0px)",
+                  WebkitBackdropFilter: scrolled ? "blur(18px)" : "blur(0px)",
+                  border: scrolled ? "1px solid #2A2A2A" : "1px solid transparent",
+                  boxShadow: scrolled ? "0 10px 30px rgba(0,0,0,0.5)" : "none",
+                  color: scrolled ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.85)",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = "#00ff66";
+                  if (scrolled) {
+                    e.currentTarget.style.borderColor = "rgba(0,255,102,0.45)";
+                    e.currentTarget.style.background = "rgba(28,28,28,0.75)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = scrolled ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.85)";
+                  if (scrolled) {
+                    e.currentTarget.style.borderColor = "#2A2A2A";
+                    e.currentTarget.style.background = "rgba(18,18,18,0.65)";
+                    e.currentTarget.style.transform = "translateY(0px)";
+                  }
+                }}
+                aria-label="Resume"
+              >
+                RESUME
+              </a>
+            </div>
 
           </div>
         </header>
