@@ -19,7 +19,8 @@
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "resend": "^6.34.1"
+    "resend": "^6.34.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/node": "^20",
