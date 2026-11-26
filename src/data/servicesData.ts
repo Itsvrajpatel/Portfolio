@@ -1,8 +1,8 @@
 import { StaticImageData } from "next/image";
-import aiAgentsImg from "@/assets/services/ai-agents.jpg";
-import saasMvpImg from "@/assets/services/saas-mvp.jpg";
-import webDevImg from "@/assets/services/web-dev.jpg";
-import uiUxImg from "@/assets/services/ui-ux.jpg";
+import aiAgentsImg from "@/assets/services/ai-agents.jpeg";
+import saasMvpImg from "@/assets/services/saas-mvp.jpeg";
+import webDevImg from "@/assets/services/web-dev.jpeg";
+import uiUxImg from "@/assets/services/ui-ux.jpeg";
 
 export interface ServiceFeature {
   title: string;
