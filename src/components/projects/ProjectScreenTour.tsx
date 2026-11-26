@@ -217,7 +217,7 @@ export default function ProjectScreenTour({ project }: ProjectScreenTourProps): 
             {currentScreen.isScreenshot ? (
               <div className="relative w-full max-w-4xl aspect-[16/10] rounded-xl overflow-hidden border border-white/15 shadow-[0_25px_60px_rgba(0,0,0,0.85)] bg-black/80 group">
                 <Image
-                  src={project.image}
+                  src={currentScreen.image ?? project.image}
                   alt={currentScreen.title}
                   fill
                   sizes="(max-width: 1024px) 100vw, 1000px"
@@ -301,7 +301,7 @@ export default function ProjectScreenTour({ project }: ProjectScreenTourProps): 
                   {/* Miniature mockup preview box with real image preview */}
                   <div className="relative w-full h-12 sm:h-14 rounded-md bg-[#16161e] border border-white/10 mb-2 overflow-hidden">
                     <Image
-                      src={project.image}
+                      src={screen.image ?? project.image}
                       alt={screen.tabLabel}
                       fill
                       sizes="180px"
@@ -317,13 +317,15 @@ export default function ProjectScreenTour({ project }: ProjectScreenTourProps): 
                         <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 inline-block shadow-sm" />
                         <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block shadow-sm" />
                       </div>
-                      <span className="text-[8px] font-mono text-white/90 bg-black/60 px-1 rounded">0{idx + 1}</span>
+                      <span className="text-[8px] font-mono text-white/90 bg-black/60 px-1 rounded">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
                     </div>
 
                     {/* Bottom indicator tag */}
                     <div className="absolute bottom-1 left-1.5 z-10 pointer-events-none">
                       <span className="text-[7.5px] font-mono text-[#00ff66] tracking-wider uppercase bg-black/80 px-1.5 py-0.5 rounded border border-[#00ff66]/30">
-                        {screen.isScreenshot ? "LIVE UI" : screen.tabLabel.split(" ")[0]}
+                        {idx === 0 ? "COVER" : screen.tabLabel.split(" ")[0]}
                       </span>
                     </div>
                   </div>
