@@ -8,14 +8,10 @@ import {
   TypeScript,
   TailwindCSS,
   NodeJs,
-  Python,
   FastAPI,
   OpenAI,
   Supabase,
-  Prisma,
   Redis,
-  Docker,
-  GraphQL,
   ThreeJsLight,
   MongoDB,
   Git,
@@ -111,19 +107,6 @@ const TECHNOLOGIES: TechItem[] = [
     ),
   },
   {
-    id: "python",
-    name: "Python",
-    category: "AI & Data Pipelines",
-    color: "#3776AB",
-    glow: "rgba(55, 118, 171, 0.45)",
-    icon: (
-      <Python
-        size={44}
-        className="transition-transform duration-300 group-hover/card:scale-110"
-      />
-    ),
-  },
-  {
     id: "fastapi",
     name: "FastAPI",
     category: "High-Throughput APIs",
@@ -163,19 +146,6 @@ const TECHNOLOGIES: TechItem[] = [
     ),
   },
   {
-    id: "prisma",
-    name: "Prisma",
-    category: "Type-Safe ORM",
-    color: "#5A67D8",
-    glow: "rgba(90, 103, 216, 0.45)",
-    icon: (
-      <Prisma
-        size={44}
-        className="transition-transform duration-300 group-hover/card:scale-110"
-      />
-    ),
-  },
-  {
     id: "redis",
     name: "Redis",
     category: "In-Memory Cache",
@@ -183,32 +153,6 @@ const TECHNOLOGIES: TechItem[] = [
     glow: "rgba(220, 56, 45, 0.45)",
     icon: (
       <Redis
-        size={44}
-        className="transition-transform duration-300 group-hover/card:scale-110"
-      />
-    ),
-  },
-  {
-    id: "docker",
-    name: "Docker",
-    category: "Containerization",
-    color: "#2496ED",
-    glow: "rgba(36, 150, 237, 0.45)",
-    icon: (
-      <Docker
-        size={44}
-        className="transition-transform duration-300 group-hover/card:scale-110"
-      />
-    ),
-  },
-  {
-    id: "graphql",
-    name: "GraphQL",
-    category: "API Query Language",
-    color: "#E10098",
-    glow: "rgba(225, 0, 152, 0.45)",
-    icon: (
-      <GraphQL
         size={44}
         className="transition-transform duration-300 group-hover/card:scale-110"
       />
